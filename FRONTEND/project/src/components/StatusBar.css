@@ -1,0 +1,97 @@
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 280px;
+  right: 0;
+  background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
+  border-top: 1px solid #bdc3c7;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 8px;       /* Compact height */
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+  gap: 4px;               /* Reduce gap between badges */
+}
+
+.status-items {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;      /* Smaller padding */
+  border-radius: 12px;
+  font-size: 10px;       /* Smaller font */
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.status-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.status-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+/* Status colors */
+.status-critical {
+  background: #e74c3c;
+}
+
+.status-warning {
+  background: #f39c12;
+}
+
+.status-active {
+  background: #3498db;
+}
+
+.status-normal {
+  background: #27ae60;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .status-bar {
+    left: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .status-item {
+    font-size: 9px;
+    padding: 2px 5px;
+    gap: 3px;
+  }
+
+  .status-indicator {
+    width: 4px;
+    height: 4px;
+  }
+}

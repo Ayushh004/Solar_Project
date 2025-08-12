@@ -1,0 +1,117 @@
+/* src/components/LiveStatus.css */
+.live-status {
+  max-width: 1400px;
+}
+
+/* Page head spacing */
+.page-head h2 {
+  font-size: 32px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.page-head p {
+  margin-bottom: 8px;
+}
+
+.data-section h3 {
+  color: #2c3e50;
+  margin: 10px 0;
+  font-size: 20px;
+  font-weight: 600; /* 🔥 bolder heading feel */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* KPI strip */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 16px 0 6px;
+}
+.kpi-card {
+  background: linear-gradient(135deg, #f9fafb, #eef1f5);
+  border-radius: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e6ebf1;
+  display: grid;
+  gap: 4px;
+}
+.kpi-label{font-size:12px;color:#6b7a8a;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.kpi-value{font-size:20px;font-weight:800;color:#2c3e50}
+.kpi-trend{font-size:12px;font-weight:700}
+.kpi-trend.up{color:#27ae60}
+.kpi-trend.down{color:#e67e22}
+.kpi-trend.ok{color:#3498db}
+
+/* Charts grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  margin: 16px 0 28px;
+}
+
+/* Uniform chart cards */
+.chart-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #eef1f4;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 300px;           /* uniform height (square feel for doughnuts) */
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2c3e50;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f0f3f7;
+}
+
+.chart-body {
+  position: relative;
+  flex: 1;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 235px;
+}
+
+/* Every canvas fills its card area */
+.chart-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Force doughnuts to be perfect square inside the card */
+.chart-card.doughnut .chart-body {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  margin: auto;
+}
+
+/* Table & badges */
+.data-section { margin-top: 10px; }
+.data-section h3 { color: #2c3e50; margin: 10px 0; font-size: 20px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+  .chart-card { height: 260px; }
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .data-table { display: block; overflow-x: auto; white-space: nowrap; }
+  .data-table th, .data-table td { font-size: 12px; padding: 10px 8px; }
+}

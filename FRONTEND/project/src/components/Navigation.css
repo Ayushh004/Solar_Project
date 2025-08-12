@@ -1,0 +1,201 @@
+/* --------------------
+   Desktop Sidebar Styles
+-------------------- */
+.navigation {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.nav-header {
+  padding: 30px 24px 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-header h2 {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.nav-header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 0;
+}
+
+.nav-tabs {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.nav-tab.active {
+  background: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.nav-tab.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #3498db;
+}
+
+.nav-tab svg {
+  flex-shrink: 0;
+}
+
+/* Scrollbar styling for navigation */
+.nav-tabs::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nav-tabs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.nav-search {
+  display: flex;
+  padding: 10px 16px;
+  gap: 8px;
+}
+
+.nav-search input {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: white;  
+  color: black;
+}
+
+.nav-search button {
+  background: #3498db;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  color: white;
+}
+
+.nav-search button:hover {
+  background: #2980b9;
+}
+
+/* --------------------
+   Mobile Dropdown Styles
+-------------------- */
+
+/* Default hide on desktop */
+.mobile-dropdown {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Hide desktop sidebar */
+  .desktop-nav {
+    display: none;
+  }
+
+  /* Show dropdown on mobile */
+  .mobile-dropdown {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    z-index: 2000;
+  }
+
+  .dropdown-btn {
+    background: #3498db;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    width: 140px;
+  }
+
+  .dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .dropdown-item:hover {
+    background: #f1f1f1;
+  }
+
+  .dropdown-item.active {
+    background: #e6f0fa;
+    font-weight: 600;
+  }
+}
+
+/* --------------------
+   Responsive font scaling
+-------------------- */
+@media (max-width: 1024px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+}

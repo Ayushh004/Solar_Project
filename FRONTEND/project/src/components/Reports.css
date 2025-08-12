@@ -1,0 +1,137 @@
+.reports {
+  max-width: 1400px;
+}
+
+.reports h2 {
+  font-size: 32px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.report-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.report-section.full-width h3 {
+  color: #2c3e50;
+  margin: 10px 0;
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+.report-section.no-bg {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.report-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-container {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Chart canvas responsive */
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 220px;
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e6ed;
+}
+
+.data-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chart-container {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+
+  .chart-container canvas {
+    max-height: 180px;
+  }
+
+  .data-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .data-table th,
+  .data-table td {
+    font-size: 12px;
+    padding: 10px 8px;
+  }
+}
