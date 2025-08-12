@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Reports.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
+import { API_BASE_URL } from "../config";
+fetch(`${API_BASE_URL}/api/fake-data`)
+
 
 ChartJS.register(...registerables);
 

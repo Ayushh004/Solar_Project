@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./LiveStatus.css";
+import { API_BASE_URL } from "../config";
+fetch(`${API_BASE_URL}/api/fake-data`)
 import {
   Chart as ChartJS,
   LineElement,
