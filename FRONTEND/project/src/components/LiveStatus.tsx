@@ -96,7 +96,7 @@ const LiveStatus: React.FC = () => {
       setData(JSON.parse(cached));
     } else {
      // https://solar-project-backend.onrender.com
-      fetch("https://solar-project-backend.onrender.com/api/fake-data")
+      fetch("https://solar-project-backend.onrender.com/api/fake-data/")
         .then((res) => res.json())
         .then((json) => {
           setData(json);
