@@ -96,7 +96,7 @@ const LiveStatus: React.FC = () => {
       setData(JSON.parse(cached));
     } else {
      // https://solar-project-backend.onrender.com
-      fetch("https://solar-project-backend.onrender.com/api/fake-data/")
+      fetch("http://localhost:5000/api/fakedataRoutes/fake-data")
         .then((res) => res.json())
         .then((json) => {
           setData(json);
@@ -111,7 +111,7 @@ const LiveStatus: React.FC = () => {
   useEffect(() => {
     if (!data) return;
 
-    // 🔥 Temperature Thermometer Chart
+  //Temperature Thermometer Chart
 if (charts.current["temp"]) {
   charts.current["temp"]!.data.datasets[0].data = [parseFloat(data.temperature)];
   charts.current["temp"]!.update();
