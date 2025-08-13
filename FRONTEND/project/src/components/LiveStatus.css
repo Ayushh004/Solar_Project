@@ -22,7 +22,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
+.data-table tbody tr:nth-child(even) {
+  background-color: #f9fbfd;
+}
 
 /* KPI strip */
 .kpi-grid {

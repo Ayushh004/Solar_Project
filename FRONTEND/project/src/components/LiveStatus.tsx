@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./LiveStatus.css";
-import { API_BASE_URL } from "../config";
-fetch(`${API_BASE_URL}/api/fake-data`)
 import {
   Chart as ChartJS,
   LineElement,
@@ -78,12 +76,15 @@ const toPct = (raw: number) =>
 const LiveStatus: React.FC = () => {
   const [data, setData] = useState<Reading | null>(null);
 
-  const chargeRef = useRef<HTMLCanvasElement>(null);
+
+  const temperatureRef = useRef<HTMLCanvasElement>(null);
   const batteryRef = useRef<HTMLCanvasElement>(null);
-  const loraRef = useRef<HTMLCanvasElement>(null);
+  const curref = useRef<HTMLCanvasElement>(null);
   const cleaningRef = useRef<HTMLCanvasElement>(null);
 
-  const charts = useRef<{ charge?: Chart; battery?: Chart; lora?: Chart; clean?: Chart }>({});
+  const charts = useRef<{ temp?: Chart; battery?: Chart; lora?: Chart; clean?: Chart }>({});
+
+
 
   // ---- Fetch once every 15 minutes (no change to backend/logic) ----
   useEffect(() => {
@@ -108,6 +109,64 @@ const LiveStatus: React.FC = () => {
   // ---- Init / Update charts when data loads ----
   useEffect(() => {
     if (!data) return;
+
+    // 🔥 Temperature Thermometer Chart
+if (charts.current["temp"]) {
+  charts.current["temp"]!.data.datasets[0].data = [parseFloat(data.temperature)];
+  charts.current["temp"]!.update();
+} else if (temperatureRef.current) {
+  const ctx = temperatureRef.current.getContext("2d")!;
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  gradient.addColorStop(0, "#e74c3c");   // red (hot)
+  gradient.addColorStop(1, "#3498db");   // blue (cold)
+
+  charts.current["temp"] = new ChartJS(temperatureRef.current, {
+    type: "bar",
+    data: {
+      labels: [""],
+      datasets: [
+        {
+          label: "Temperature (°C)",
+          data: [parseFloat(data.temperature)],
+          backgroundColor: gradient,
+          borderRadius: 8,
+          barThickness: 60,
+        },
+      ],
+    },
+    options: {
+      indexAxis: "y", // vertical bar
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 800,
+        easing: "easeOutCubic",
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.parsed.x} °C`
+          }
+        }
+      },
+      scales: {
+        x: {
+          min: 0,
+          max: 50, // adjust based on max expected temp
+          ticks: {
+            stepSize: 10,
+            callback: val => `${val}°`
+          }
+        },
+        y: {
+          display: false
+        }
+      }
+    }
+  });
+}
+
 
     const createOrUpdateChart = (
       key: keyof typeof charts.current,
@@ -158,7 +217,7 @@ const LiveStatus: React.FC = () => {
             centerText: { text: centerText || "" },
             tooltip: { enabled: true },
           },
-          cutout: type === "doughnut" ? "72%" : undefined,
+          cutout: type === "doughnut" ? "70%" : undefined,
           scales:
             type === "line"
               ? {
@@ -170,15 +229,54 @@ const LiveStatus: React.FC = () => {
       });
     };
 
-    createOrUpdateChart(
-      "charge",
-      chargeRef,
-      "line",
-      ["Avg Current", "Running Current"],
-      [data.avg_current, data.running_current],
-      ["#2980b9"]
-    );
+ // 🔁 Chart 3: Avg vs Running Current (Bar Chart)
+if (charts.current["lora"]) {
+  const chart = charts.current["lora"]!;
+  chart.data.datasets[0].data = [data.avg_current, data.running_current];
+  chart.update();
+} else if (curref.current) {
+  charts.current["lora"] = new ChartJS(curref.current, {
+    type: "bar",
+    data: {
+      labels: ["Average Current", "Running Current"],
+      datasets: [
+        {
+          label: "Current (mA)",
+          data: [data.avg_current, data.running_current],
+          backgroundColor: ["#8e44ad", "#27ae60"],
+          borderRadius: 10,
+          borderSkipped: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        duration: 800,
+        easing: "easeOutQuart",
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} mA`,
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 10,
+          },
+        },
+      },
+    },
+  });
+}
 
+         // BATTERY CHART
     const batt = toPct(data.battery_percentage);
     createOrUpdateChart(
       "battery",
@@ -190,26 +288,6 @@ const LiveStatus: React.FC = () => {
       `${batt}%`
     );
 
-    const loraPct = data.connectivity_status ? 75 : 10;
-    createOrUpdateChart(
-      "lora",
-      loraRef,
-      "doughnut",
-      ["Signal", "Loss"],
-      [loraPct, 100 - loraPct],
-      ["#1abc9c", "#ecf0f1"],
-      `${loraPct}%`
-    );
-
-    const speedPct = Math.round((Number(data.motor_speed) || 0) * 1000);
-    createOrUpdateChart(
-      "clean",
-      cleaningRef,
-      "line",
-      ["Now"],
-      [speedPct],
-      ["#e67e22"]
-    );
   }, [data]);
 
   if (!data) return <p>Loading data please wait...</p>;
@@ -249,12 +327,13 @@ const LiveStatus: React.FC = () => {
 
       {/* Charts */}
       <div className="charts-grid">
-        <div className="chart-card">
-          <div className="chart-title">Charging Current</div>
-          <div className="chart-body">
-            <canvas ref={chargeRef} className="chart-canvas" />
-          </div>
-        </div>
+        
+
+      <div className="chart-card">
+  <div className="chart-title">Temperature</div>
+  <div className="chart-body"><canvas ref={temperatureRef} className="chart-canvas" /></div>
+</div>
+
 
         <div className="chart-card doughnut">
           <div className="chart-title">Battery</div>
@@ -263,17 +342,10 @@ const LiveStatus: React.FC = () => {
           </div>
         </div>
 
-        <div className="chart-card doughnut">
-          <div className="chart-title">LoRa Signal Strength</div>
-          <div className="chart-body">
-            <canvas ref={loraRef} className="chart-canvas" />
-          </div>
-        </div>
-
         <div className="chart-card">
-          <div className="chart-title">Cleaning Speed</div>
+          <div className="chart-title">Average current v/s Running</div>
           <div className="chart-body">
-            <canvas ref={cleaningRef} className="chart-canvas" />
+            <canvas ref={curref} className="chart-canvas" />
           </div>
         </div>
       </div>
@@ -291,10 +363,10 @@ const LiveStatus: React.FC = () => {
   <tr id="Voltage Battery"><td>Voltage Battery</td><td>{data.voltage_battery} mV</td></tr>
   <tr id="Voltage Solar Panel"><td>Voltage Solar Panel</td><td>{data.voltage_solar_panel} mV</td></tr>
   <tr id="Running Current"><td>Running Current</td><td>{data.running_current} mA</td></tr>
-  <tr id="Avg Current"><td>Avg Current</td><td>{data.avg_current} mA</td></tr>
+  <tr id="Average Current"><td>Average Current</td><td>{data.avg_current} mA</td></tr>
   <tr id="Motor Speed"><td>Motor Speed</td><td>{data.motor_speed}</td></tr>
   <tr id="Panel Location"><td>Panel Location</td><td>{data.panel_location}</td></tr>
-  <tr id="Battery %"><td>Battery %</td><td>{batteryPct} %</td></tr>
+  <tr id="Battery"><td>Battery</td><td>{batteryPct} %</td></tr>
   <tr id="Connectivity Status"><td>Connectivity Status</td><td>{data.connectivity_status ? "Online" : "Offline"}</td></tr>
   <tr id="Total Runtime"><td>Total Runtime</td><td>{data.total_runtime} min</td></tr>
   <tr id="DBG Accel Output"><td>DBG Accel Output</td><td>{data.dbg_accel_output}</td></tr>

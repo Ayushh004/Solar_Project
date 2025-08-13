@@ -13,6 +13,9 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
 
   // ✅ Updated mapping: search term → element ID + tab name
 const parameterMap: Record<string, { id: string; tab: string }> = {
+
+  //live status parameters
+
   "Device ID": { id: "Device ID", tab: "live-status" },
   "Device State": { id: "Device State", tab: "live-status" },
   "FW Version": { id: "FW Version", tab: "live-status" },
@@ -32,7 +35,19 @@ const parameterMap: Record<string, { id: string; tab: string }> = {
   "DBG Motor Status 0": { id: "DBG Motor Status 0", tab: "live-status" },
   "DBG Motor Status 1": { id: "DBG Motor Status 1", tab: "live-status" },
   "General Status": { id: "General Status", tab: "live-status" },
-  "Time Stamp": { id: "Time Stamp", tab: "live-status" }
+  "Time Stamp": { id: "Time Stamp", tab: "live-status" },
+
+  //reports parameters
+
+  "error code": { tab: "reports", id: "Error Code" },
+  "total runtime reports": { tab: "reports", id: "Total Runtime" },
+  "dbg accel output": { tab: "reports", id: "DBG Accel Output" },
+  "dbg gyro output": { tab: "reports", id: "DBG Gyro Output" },
+  "dbg motor status 0": { tab: "reports", id: "DBG Motor Status 0" },
+  "dbg motor status 1": { tab: "reports", id: "DBG Motor Status 1" },
+  "general status": { tab: "reports", id: "General Status" },
+  "time stamp reports": { tab: "reports", id: "Time Stamp" },
+
 };
 
 
@@ -71,6 +86,9 @@ const parameterMap: Record<string, { id: string; tab: string }> = {
     }
   }
 };
+
+
+
 
 
   // Navigation tabs

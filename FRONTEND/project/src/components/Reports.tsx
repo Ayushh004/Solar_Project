@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Reports.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
-import { API_BASE_URL } from "../config";
-fetch(`${API_BASE_URL}/api/fake-data`)
-
 
 ChartJS.register(...registerables);
 
@@ -91,6 +88,7 @@ const Reports: React.FC = () => {
             plugins: {
               legend: { display: false },
               tooltip: { enabled: true },
+              centerText: { text: `${data.error_code}` },
             },
             maintainAspectRatio: false,
           },
