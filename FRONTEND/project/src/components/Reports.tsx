@@ -18,7 +18,7 @@ const Reports: React.FC = () => {
     if (cached && cachedTime && now - parseInt(cachedTime) < 15 * 60 * 1000) {
       setData(JSON.parse(cached));
     } else {
-      fetch('http://localhost:5000/api/fake-data')
+      fetch('https://solar-project-backend.onrender.com')
         .then(res => res.json())
         .then(json => {
           setData(json);
