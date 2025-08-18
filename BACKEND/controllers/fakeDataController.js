@@ -3,12 +3,12 @@ import Reading from "../models/Readings.js";
 
 
 
-//   Helper: 15-min slot floor
+//  15 min ki bucket slot ban rhi hai
 function get15MinSlotStart(d = new Date()) {
   const slot = new Date(d);
   slot.setSeconds(0, 0);
   const m = slot.getMinutes();
-   // 0-14 -> 0, 15-29 -> 15, 30-44 -> 30, 45-59 -> 45
+   // 0-14 -> 0, 15-29 -> 15, 30-44 -> 30
   const bucket = Math.floor(m / 15) * 15;
   slot.setMinutes(bucket);
   return slot;
@@ -16,7 +16,6 @@ function get15MinSlotStart(d = new Date()) {
 
 
 //   Helper: Save if new slot only
-
 
 async function saveIfNewSlot(payload) {
   const slotStart = get15MinSlotStart();
