@@ -6,6 +6,7 @@ import Reports from './components/Reports';
 import Alerts from './components/Alerts';
 import StatusBar from './components/StatusBar';
 import './App.css';
+import AIIntelligence from './components/AIInteligence';
 
 function App() {
   const [activeTab, setActiveTab] = useState('admin');
@@ -41,20 +42,22 @@ function App() {
   };
 
   // Render content based on active tab
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'admin':
-        return <AdminPanel onCityZoneUpdate={updateCityZone} />;
-      case 'live-status':
-        return <LiveStatus cityZone={appState} />;
-      case 'reports':
-        return <Reports />;
-      case 'alerts':
-        return <Alerts />;
-      default:
-        return <AdminPanel onCityZoneUpdate={updateCityZone} />;
-    }
-  };
+const renderContent = () => {
+  switch (activeTab) {
+    case 'admin':
+      return <AdminPanel onCityZoneUpdate={updateCityZone} />;
+    case 'live-status':
+      return <LiveStatus cityZone={appState} />;
+    case 'reports':
+      return <Reports />;
+    case 'alerts':
+      return <Alerts />;
+    case 'ai-intelligence':                      // <-- add this case
+      return <AIIntelligence />;
+    default:
+      return <AdminPanel onCityZoneUpdate={updateCityZone} />;
+  }
+};
 
   return (
     <div className="app-container">

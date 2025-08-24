@@ -1,5 +1,14 @@
+// Navigation.tsx
 import React, { useState } from 'react';
-import { Settings, Activity, BarChart3, AlertTriangle, ChevronDown, Search } from 'lucide-react';
+import {
+  Settings,
+  Activity,
+  BarChart3,
+  AlertTriangle,
+  ChevronDown,
+  Search,
+  Brain,            // NEW: icon for AI Intelligence
+} from 'lucide-react';
 import './Navigation.css';
 
 interface NavigationProps {
@@ -11,85 +20,77 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [query, setQuery] = useState('');
 
-  // ✅ Updated mapping: search term → element ID + tab name
-const parameterMap: Record<string, { id: string; tab: string }> = {
+  // ✅ search term → element ID + tab name (keep as‑is; extend anytime)
+  const parameterMap: Record<string, { id: string; tab: string }> = {
+    // live status parameters
+    'Device ID': { id: 'Device ID', tab: 'live-status' },
+    'Device State': { id: 'Device State', tab: 'live-status' },
+    'FW Version': { id: 'FW Version', tab: 'live-status' },
+    'Temperature': { id: 'Temperature', tab: 'live-status' },
+    'Humidity': { id: 'Humidity', tab: 'live-status' },
+    'Voltage Battery': { id: 'Voltage Battery', tab: 'live-status' },
+    'Voltage Solar Panel': { id: 'Voltage Solar Panel', tab: 'live-status' },
+    'Running Current': { id: 'Running Current', tab: 'live-status' },
+    'Avg Current': { id: 'Avg Current', tab: 'live-status' },
+    'Motor Speed': { id: 'Motor Speed', tab: 'live-status' },
+    'Panel Location': { id: 'Panel Location', tab: 'live-status' },
+    'Battery %': { id: 'Battery %', tab: 'live-status' },
+    'Connectivity Status': { id: 'Connectivity Status', tab: 'live-status' },
+    'Total Runtime': { id: 'Total Runtime', tab: 'live-status' },
+    'DBG Accel Output': { id: 'DBG Accel Output', tab: 'live-status' },
+    'DBG Gyro Output': { id: 'DBG Gyro Output', tab: 'live-status' },
+    'DBG Motor Status 0': { id: 'DBG Motor Status 0', tab: 'live-status' },
+    'DBG Motor Status 1': { id: 'DBG Motor Status 1', tab: 'live-status' },
+    'General Status': { id: 'General Status', tab: 'live-status' },
+    'Time Stamp': { id: 'Time Stamp', tab: 'live-status' },
 
-  //live status parameters
-
-  "Device ID": { id: "Device ID", tab: "live-status" },
-  "Device State": { id: "Device State", tab: "live-status" },
-  "FW Version": { id: "FW Version", tab: "live-status" },
-  "Temperature": { id: "Temperature", tab: "live-status" },
-  "Humidity": { id: "Humidity", tab: "live-status" },
-  "Voltage Battery": { id: "Voltage Battery", tab: "live-status" },
-  "Voltage Solar Panel": { id: "Voltage Solar Panel", tab: "live-status" },
-  "Running Current": { id: "Running Current", tab: "live-status" },
-  "Avg Current": { id: "Avg Current", tab: "live-status" },
-  "Motor Speed": { id: "Motor Speed", tab: "live-status" },
-  "Panel Location": { id: "Panel Location", tab: "live-status" },
-  "Battery %": { id: "Battery %", tab: "live-status" },
-  "Connectivity Status": { id: "Connectivity Status", tab: "live-status" },
-  "Total Runtime": { id: "Total Runtime", tab: "live-status" },
-  "DBG Accel Output": { id: "DBG Accel Output", tab: "live-status" },
-  "DBG Gyro Output": { id: "DBG Gyro Output", tab: "live-status" },
-  "DBG Motor Status 0": { id: "DBG Motor Status 0", tab: "live-status" },
-  "DBG Motor Status 1": { id: "DBG Motor Status 1", tab: "live-status" },
-  "General Status": { id: "General Status", tab: "live-status" },
-  "Time Stamp": { id: "Time Stamp", tab: "live-status" },
-
-  //reports parameters
-
-  "error code": { tab: "reports", id: "Error Code" },
-  "total runtime reports": { tab: "reports", id: "Total Runtime" },
-  "dbg accel output": { tab: "reports", id: "DBG Accel Output" },
-  "dbg gyro output": { tab: "reports", id: "DBG Gyro Output" },
-  "dbg motor status 0": { tab: "reports", id: "DBG Motor Status 0" },
-  "dbg motor status 1": { tab: "reports", id: "DBG Motor Status 1" },
-  "general status": { tab: "reports", id: "General Status" },
-  "time stamp reports": { tab: "reports", id: "Time Stamp" },
-
-};
-
+    // reports parameters
+    'error code': { tab: 'reports', id: 'Error Code' },
+    'total runtime reports': { tab: 'reports', id: 'Total Runtime' },
+    'dbg accel output': { tab: 'reports', id: 'DBG Accel Output' },
+    'dbg gyro output': { tab: 'reports', id: 'DBG Gyro Output' },
+    'dbg motor status 0': { tab: 'reports', id: 'DBG Motor Status 0' },
+    'dbg motor status 1': { tab: 'reports', id: 'DBG Motor Status 1' },
+    'general status': { tab: 'reports', id: 'General Status' },
+    'time stamp reports': { tab: 'reports', id: 'Time Stamp' },
+  };
 
   // ✅ Handle search with auto tab switch + scroll + highlight
- const handleSearch = () => {
-  if (query.trim()) {
-    const searchKey = query.toLowerCase().trim();
+  const handleSearch = () => {
+    if (query.trim()) {
+      const searchKey = query.toLowerCase().trim();
 
-    // Try exact match (case-insensitive)
-    const exactMatch = Object.entries(parameterMap).find(
-      ([key]) => key.toLowerCase() === searchKey
-    );
+      // exact match
+      const exactMatch = Object.entries(parameterMap).find(
+        ([key]) => key.toLowerCase() === searchKey
+      );
 
-    // If no exact match, try partial match
-    const found = exactMatch || Object.entries(parameterMap).find(
-      ([key]) => key.toLowerCase().includes(searchKey)
-    );
+      // partial match
+      const found =
+        exactMatch ||
+        Object.entries(parameterMap).find(([key]) =>
+          key.toLowerCase().includes(searchKey)
+        );
 
-    if (found) {
-      const { id, tab } = found[1];
+      if (found) {
+        const { id, tab } = found[1];
+        onTabChange(tab);
 
-      onTabChange(tab);
-
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          element.style.outline = "2px solid #3498db";
-          setTimeout(() => {
-            element.style.outline = "";
-          }, 1500);
-        }
-      }, 400);
-    } else {
-      alert("Parameter not found!");
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.style.outline = '2px solid #3498db';
+            setTimeout(() => {
+              element.style.outline = '';
+            }, 1500);
+          }
+        }, 400);
+      } else {
+        alert('Parameter not found!');
+      }
     }
-  }
-};
-
-
-
-
+  };
 
   // Navigation tabs
   const tabs = [
@@ -97,7 +98,11 @@ const parameterMap: Record<string, { id: string; tab: string }> = {
     { id: 'live-status', label: 'Live Status', icon: Activity },
     { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+    { id: 'ai-intelligence', label: 'AI Intelligence', icon: Brain }, // NEW
   ];
+
+  // NEW: compute active label for mobile button
+  const activeLabel = tabs.find(t => t.id === activeTab)?.label || 'Admin';
 
   return (
     <>
@@ -146,7 +151,8 @@ const parameterMap: Record<string, { id: string; tab: string }> = {
           className="dropdown-btn"
           onClick={() => setDropdownOpen(!isDropdownOpen)}
         >
-          Admin <ChevronDown size={16} />
+          {activeLabel} {/* UPDATED: show active tab label instead of hardcoded "Admin" */}
+          <ChevronDown size={16} />
         </button>
         {isDropdownOpen && (
           <div className="dropdown-menu">

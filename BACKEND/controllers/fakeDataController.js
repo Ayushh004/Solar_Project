@@ -30,7 +30,7 @@ async function saveIfNewSlot(payload) {
 export const getFakeData = async (req, res) => {
   try {
     const fakeData = {
-      device_id: Math.floor(1000000000 + Math.random() * 9000000000),
+      device_id: 4132004,
       device_state: Math.floor(Math.random() * 5),
       fw_version: Math.floor(Math.random() * 100),
       temperature: (28 + Math.random() * 4).toFixed(2),
@@ -41,7 +41,7 @@ export const getFakeData = async (req, res) => {
       avg_current: Math.floor(110 + Math.random() * 15),
       motor_speed: parseFloat((Math.random() * 0.1).toFixed(2)),
       panel_location: Math.floor(10 + Math.random() * 5),
-      battery_percentage: Math.floor(240 + Math.random() * 15),
+      battery_percentage: Math.floor(Math.random() * 101),  // 0 to 100 inclusive
       connectivity_status: Math.floor(Math.random() * 2),
       error_code: Math.floor(Math.random() * 10),
       total_runtime: Math.floor(30 + Math.random() * 20),
