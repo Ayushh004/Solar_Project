@@ -113,6 +113,76 @@ def predict_forecast():
         "predicted_battery_pct": round(pred[0], 2)
     })
 
+@app.route("/api/health", methods=["GET"])
+def overall_health():
+    df = get_latest_data(limit=288)  # ~24h if 5-min samples
+    if df.empty:
+        return jsonify({
+            "status": "critical",
+            "color": "red",
+            "summary": "No data available",
+            
+            "last_seen": None,
+            "metrics": {}
+        }), 503
+
+    last = df.iloc[-1]
+    now = datetime.utcnow()
+    last_ts = pd.to_datetime(last["timestamp"]).to_pydatetime() if "timestamp" in last else None
+
+    # metrics used in summary
+    battery = float(last.get("battery_percentage", 0))
+    temp = float(last.get("temperature", 0))
+    motor = float(last.get("motor_speed", 0))
+    error_code = int(last.get("error_code", 0))
+    connected = int(last.get("connectivity_status", 1))
+
+    # baseline: motor high quantile for warning check
+    try:
+        motor_p95 = float(df["motor_speed"].quantile(0.95))
+    except Exception:
+        motor_p95 = 9999
+
+    # freshness
+    stale = True
+    if last_ts:
+        stale = (now - last_ts) > timedelta(minutes=30)
+
+    # decide color
+    status = "good"
+    color = "green"
+    summary = "System healthy"
+
+    if stale or error_code > 0 or connected == 0 or battery < 15:
+        status, color = "critical", "red"
+        reasons = []
+        if stale: reasons.append("data stale")
+        if error_code > 0: reasons.append(f"error_code={error_code}")
+        if connected == 0: reasons.append("disconnected")
+        if battery < 15: reasons.append("low battery (<15%)")
+        summary = " | ".join(reasons) or "critical"
+    elif battery < 30 or temp > 60 or motor > motor_p95:
+        status, color = "warning", "yellow"
+        reasons = []
+        if battery < 30: reasons.append("battery <30%")
+        if temp > 60: reasons.append("high temperature")
+        if motor > motor_p95: reasons.append("motor spike")
+        summary = " | ".join(reasons) or "warning"
+
+    return jsonify({
+        "status": status,            # "good" | "warning" | "critical"
+        "color": color,              # "green" | "yellow" | "red"
+        "summary": summary,
+        "last_seen": last_ts.isoformat() if last_ts else None,
+        "metrics": {
+            "battery_percentage": battery,
+            "temperature": temp,
+            "motor_speed": motor,
+            "error_code": error_code,
+            "connectivity_status": connected
+        }
+    })
+
 
     
 # ---------------- Run Server ----------------
