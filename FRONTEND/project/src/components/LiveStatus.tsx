@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { getLiveData } from "../services/api";
+
 import "./LiveStatus.css";
 import {
   Chart as ChartJS,
@@ -87,6 +89,7 @@ const LiveStatus: React.FC = () => {
 
 
   // ---- Fetch once every 15 minutes (no change to backend/logic) ----
+  //backend API ldogic of render
   useEffect(() => {
     const now = Date.now();
     const cached = localStorage.getItem("liveData");
@@ -95,15 +98,13 @@ const LiveStatus: React.FC = () => {
     if (cached && cachedTime && now - parseInt(cachedTime) < 15 * 60 * 1000) {
       setData(JSON.parse(cached));
     } else {
-     // https://solar-project-backend.onrender.com
-      fetch("http://localhost:5000/api/fakedataRoutes/fake-data")
-        .then((res) => res.json())
+      getLiveData()    // ✅ Uses api.ts
         .then((json) => {
           setData(json);
           localStorage.setItem("liveData", JSON.stringify(json));
           localStorage.setItem("liveDataTime", now.toString());
         })
-        .catch((err) => console.error("Failed to fetch:", err));
+        .catch((err) => console.error("Failed to fetch live data:", err));
     }
   }, []);
 

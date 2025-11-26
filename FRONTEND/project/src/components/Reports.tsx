@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { getHistoryData } from "../services/api";
 import './Reports.css';
 import { Chart as ChartJS, registerables } from 'chart.js';
 
@@ -10,23 +11,22 @@ const Reports: React.FC = () => {
   const accelGyroChartRef = useRef<HTMLCanvasElement>(null);
   const errorCodeChartRef = useRef<HTMLCanvasElement>(null);
 
+  // ⭐ fixed API logic
   useEffect(() => {
     const now = Date.now();
-    const cached = localStorage.getItem('reportData');
-    const cachedTime = localStorage.getItem('reportDataTime');
+    const cached = localStorage.getItem("reportData");
+    const cachedTime = localStorage.getItem("reportDataTime");
 
     if (cached && cachedTime && now - parseInt(cachedTime) < 15 * 60 * 1000) {
       setData(JSON.parse(cached));
     } else {
-      //https://solar-project-backend.onrender.com
-      fetch('http://localhost:5000/api/fakedataRoutes/fake-data')
-        .then(res => res.json())
-        .then(json => {
+      getHistoryData()   // ⭐ USE api.ts
+        .then((json) => {
           setData(json);
-          localStorage.setItem('reportData', JSON.stringify(json));
-          localStorage.setItem('reportDataTime', now.toString());
+          localStorage.setItem("reportData", JSON.stringify(json));
+          localStorage.setItem("reportDataTime", now.toString());
         })
-        .catch(err => console.error('Failed to fetch report data:', err));
+        .catch((err) => console.error("Failed to fetch report data:", err));
     }
   }, []);
 
